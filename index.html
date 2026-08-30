@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Community Health Intelligence Dashboard</title>
+<style>
+:root{--orange:#ff6a00;--orange2:#ff8a00;--ink:#172033;--muted:#667085;--bg:#f6f7fb;--card:#fff;--line:#eaecf0;--green:#12b76a;--yellow:#f79009;--red:#f04438;--blue:#3b82f6}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans Thai",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.hidden{display:none!important}.app{min-height:100vh}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}.brand{display:flex;gap:12px;align-items:center;font-weight:800}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--orange),#ff9d2e);color:#fff;display:grid;place-items:center;font-size:21px;box-shadow:0 8px 22px #ff6a0030}.top-actions{display:flex;gap:10px;align-items:center}.pill{padding:8px 13px;background:#fff5eb;color:#d94801;border-radius:999px;font-size:13px;font-weight:700}
+.layout{display:flex}.side{width:250px;background:#171c2b;color:#fff;min-height:calc(100vh - 72px);padding:20px 14px;position:fixed;left:0;top:72px}.side small{color:#98a2b3;padding:10px 12px;display:block}.nav{display:flex;flex-direction:column;gap:6px}.nav button{border:0;background:transparent;color:#cbd5e1;text-align:left;padding:12px 14px;border-radius:11px;cursor:pointer;font-size:14px}.nav button:hover,.nav button.active{background:#ff6a001c;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--orange)}
+main{margin-left:250px;padding:28px;max-width:1600px;width:calc(100% - 250px)}.page-title{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px}.page-title h1{margin:0;font-size:28px}.page-title p{margin:7px 0 0;color:var(--muted);font-size:14px}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}.btn-primary{background:var(--orange);color:#fff;box-shadow:0 8px 18px #ff6a0030}.btn-light{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-danger{background:#fff;border:1px solid #fecdca;color:#b42318}.btn-sm{padding:7px 10px;border-radius:8px;font-size:12px}.actions{display:flex;gap:7px;flex-wrap:wrap}
+.grid{display:grid;gap:16px}.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 3px 12px #10182808}.kpi{position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:#ff6a0010;right:-25px;top:-25px}.kpi .label{color:var(--muted);font-size:13px}.kpi .value{font-size:29px;font-weight:850;margin-top:8px}.kpi .trend{font-size:12px;margin-top:8px}.up{color:var(--green)}.warn{color:var(--yellow)}.danger{color:var(--red)}
+.two{grid-template-columns:1.25fr .75fr;margin-top:16px}.three{grid-template-columns:repeat(3,1fr);margin-top:16px}.card h3{margin:0 0 15px;font-size:16px}.chart{height:250px;display:flex;align-items:end;gap:12px;padding:20px 8px 5px}.bar{flex:1;background:linear-gradient(180deg,var(--orange2),var(--orange));border-radius:7px 7px 2px 2px;min-height:10px;position:relative}.bar span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted)}.legend{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:15px}
+.progress{height:9px;background:#f2f4f7;border-radius:20px;overflow:hidden}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--orange),#ff9d2e);border-radius:20px}.row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:13px 0}.badge{font-size:11px;padding:5px 9px;border-radius:999px;font-weight:700}.b-green{background:#ecfdf3;color:#027a48}.b-yellow{background:#fffaeb;color:#b54708}.b-red{background:#fef3f2;color:#b42318}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:700;background:#fafafa}.table-wrap{overflow:auto}.people-tools{display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}.search{display:grid;grid-template-columns:minmax(230px,1fr) 180px;gap:10px;flex:1}.input{border:1px solid #d0d5dd;border-radius:10px;padding:11px 12px;width:100%;outline:none}.input:focus{border-color:var(--orange);box-shadow:0 0 0 3px #ff6a0014}.subtle{color:var(--muted);font-size:12px}
+.login{min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 20% 10%,#ff9d2e33,transparent 30%),linear-gradient(135deg,#171c2b,#242b3c)}.login-card{width:min(430px,92vw);background:#fff;border-radius:22px;padding:34px;box-shadow:0 25px 80px #0005}.login-logo{margin:auto auto 15px}.login h1{text-align:center;margin:0;font-size:24px}.login p{text-align:center;color:var(--muted);font-size:13px}.form-group{margin:14px 0}.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}.login .btn{width:100%;margin-top:8px}.error{color:var(--red);font-size:13px;text-align:center;margin-top:10px}
+.modal{position:fixed;inset:0;background:#10182888;display:grid;place-items:center;z-index:50;padding:20px}.modal-card{background:#fff;border-radius:18px;width:min(760px,96vw);padding:22px}.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.map{height:330px;border-radius:14px;background:linear-gradient(135deg,#fff5eb,#eef4ff);position:relative;overflow:hidden}.map:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#ffffff80 1px,transparent 1px),linear-gradient(90deg,#ffffff80 1px,transparent 1px);background-size:34px 34px}.dot{position:absolute;width:16px;height:16px;border-radius:50%;background:var(--orange);border:3px solid #fff;box-shadow:0 3px 10px #0003}.map-label{position:absolute;left:15px;top:15px;background:#fff;padding:8px 11px;border-radius:10px;font-size:12px;box-shadow:0 5px 15px #0001}
+.toast{position:fixed;right:20px;bottom:20px;background:#171c2b;color:#fff;padding:13px 16px;border-radius:12px;z-index:100;box-shadow:0 10px 30px #0003}
+@media(max-width:1000px){.side{width:74px}.side small{display:none}.nav button{font-size:0;text-align:center}.nav button:first-letter{font-size:20px}main{margin-left:74px;width:calc(100% - 74px)}.kpis{grid-template-columns:1fr 1fr}.two,.three{grid-template-columns:1fr}}
+@media(max-width:600px){.topbar{padding:0 14px}.brand span{display:none}main{padding:16px}.kpis{grid-template-columns:1fr}.form-grid,.search{grid-template-columns:1fr}.people-tools,.page-title{align-items:flex-start;gap:10px;flex-direction:column}.people-tools>.btn{width:100%}}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login">
+  <div class="login-card">
+    <div class="logo login-logo">♥</div>
+    <h1>Community Health Intelligence</h1>
+    <p>ระบบสารสนเทศสุขภาพชุมชน</p>
+    <div class="form-group"><label>ชื่อผู้ใช้</label><input id="username" class="input" autocomplete="username" placeholder="Username"></div>
+    <div class="form-group"><label>รหัสผ่าน</label><input id="password" type="password" class="input" autocomplete="current-password" placeholder="Password"></div>
+    <button class="btn btn-primary" onclick="login()">เข้าสู่ระบบ</button>
+    <div id="loginError" class="error"></div>
+    <p style="margin-top:18px;font-size:11px">Demo: admin / 1234</p>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+<header class="topbar">
+  <div class="brand"><div class="logo">♥</div><span>Community Health Intelligence</span></div>
+  <div class="top-actions"><span class="pill">RPH / รพ.สต.</span><button class="btn btn-light" onclick="logout()">ออกจากระบบ</button></div>
+</header>
+<div class="layout">
+<aside class="side">
+  <small>เมนูหลัก</small>
+  <div class="nav">
+    <button class="active" data-page="dashboard" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+    <button data-page="people" onclick="showPage('people',this)">👥 รายชื่อประชาชน</button>
+    <button data-page="screening" onclick="showPage('screening',this)">🩺 คัดกรองสุขภาพ</button>
+    <button data-page="visits" onclick="showPage('visits',this)">🏠 เยี่ยมบ้าน</button>
+    <button data-page="epidemic" onclick="showPage('epidemic',this)">🦠 ระบาดวิทยา</button>
+    <button data-page="gis" onclick="showPage('gis',this)">🗺️ แผนที่สุขภาพ</button>
+    <button data-page="kpi" onclick="showPage('kpi',this)">🎯 KPI</button>
+  </div>
+</aside>
+
+<main>
+<section id="dashboard" class="page">
+ <div class="page-title"><div><h1>ภาพรวมสุขภาพชุมชน</h1><p id="todayText"></p></div><button class="btn btn-primary" onclick="refreshDashboard()">↻ อัปเดตข้อมูล</button></div>
+ <div class="grid kpis">
+  <div class="card kpi"><div class="label">ประชากรทั้งหมด</div><div class="value" id="kPop">1,248</div><div class="trend up">▲ 2.4% จากเดือนก่อน</div></div>
+  <div class="card kpi"><div class="label">กลุ่มเสี่ยง NCD</div><div class="value" id="kRisk">326</div><div class="trend warn">● ต้องติดตาม 74 ราย</div></div>
+  <div class="card kpi"><div class="label">เยี่ยมบ้านเดือนนี้</div><div class="value" id="kVisit">184</div><div class="trend up">▲ 91% ของเป้าหมาย</div></div>
+  <div class="card kpi"><div class="label">เหตุการณ์เฝ้าระวัง</div><div class="value" id="kEvent">12</div><div class="trend danger">● 2 จุดต้องเฝ้าระวัง</div></div>
+ </div>
+ <div class="grid two">
+  <div class="card"><h3>แนวโน้มการคัดกรอง 6 เดือน</h3><div id="chart" class="chart"></div><div class="legend"><span>ม.ค.</span><span>ก.พ.</span><span>มี.ค.</span><span>เม.ย.</span><span>พ.ค.</span><span>มิ.ย.</span></div></div>
+  <div class="card"><h3>สถานะกลุ่มเสี่ยง</h3>
+   <div class="row"><span>ความเสี่ยงต่ำ</span><b>48%</b></div><div class="progress"><i style="width:48%"></i></div>
+   <div class="row"><span>ปานกลาง</span><b>31%</b></div><div class="progress"><i style="width:31%"></i></div>
+   <div class="row"><span>สูง</span><b>15%</b></div><div class="progress"><i style="width:15%"></i></div>
+   <div class="row"><span>สูงมาก</span><b>6%</b></div><div class="progress"><i style="width:6%"></i></div>
+  </div>
+ </div>
+ <div class="grid three">
+  <div class="card"><h3>🔔 แจ้งเตือนสำคัญ</h3><div class="row"><span>ผู้ป่วยขาดนัดติดตาม</span><span class="badge b-red">12 ราย</span></div><div class="row"><span>ครัวเรือนยังไม่คัดกรอง</span><span class="badge b-yellow">35 หลัง</span></div><div class="row"><span>พื้นที่เสี่ยงไข้เลือดออก</span><span class="badge b-red">2 จุด</span></div></div>
+  <div class="card"><h3>🏘️ หมู่บ้านที่ควรติดตาม</h3><div class="row"><span>หมู่ 5</span><span class="badge b-red">สูงมาก</span></div><div class="row"><span>หมู่ 8</span><span class="badge b-yellow">สูง</span></div><div class="row"><span>หมู่ 2</span><span class="badge b-yellow">ปานกลาง</span></div></div>
+  <div class="card"><h3>🎯 KPI ภาพรวม</h3><div class="row"><span>ผลการดำเนินงาน</span><b>93%</b></div><div class="progress"><i style="width:93%"></i></div><div class="row"><span>คัดกรอง NCD</span><b>94%</b></div><div class="progress"><i style="width:94%"></i></div><div class="row"><span>เยี่ยมบ้าน</span><b>91%</b></div><div class="progress"><i style="width:91%"></i></div></div>
+ </div>
+</section>
+
+<section id="people" class="page hidden">
+ <div class="page-title"><div><h1>รายชื่อประชาชน</h1><p>เข้าถึงได้หลัง Login เท่านั้น</p></div><button class="btn btn-primary" onclick="openPerson()">+ เพิ่มรายชื่อ</button></div>
+ <div class="card"><div class="people-tools"><div class="search"><input id="personSearch" class="input" placeholder="ค้นหาชื่อ เลขบัตร หมู่บ้าน สถานะ หรือความเสี่ยง..." oninput="renderPeople()"><select id="riskFilter" class="input" onchange="renderPeople()"><option value="">ทุกระดับความเสี่ยง</option><option>ต่ำ</option><option>ปานกลาง</option><option>สูง</option><option>สูงมาก</option></select></div><button class="btn btn-light" onclick="resetPeopleFilters()">ล้างค้นหา</button></div><div class="table-wrap"><table><thead><tr><th>ชื่อ-สกุล</th><th>เลขบัตร</th><th>เพศ</th><th>อายุ</th><th>หมู่บ้าน</th><th>สถานะสุขภาพ</th><th>สถานะความเสี่ยง</th><th>จัดการ</th></tr></thead><tbody id="peopleBody"></tbody></table></div></div>
+</section>
+
+<section id="screening" class="page hidden"><div class="page-title"><div><h1>คัดกรองสุขภาพ</h1><p>ภาพรวมการคัดกรองประชาชน</p></div><button class="btn btn-primary" onclick="toast('เปิดแบบฟอร์มคัดกรองได้จากเมนูนี้ในเวอร์ชันเชื่อมฐานข้อมูลจริง')">+ บันทึกผลคัดกรอง</button></div><div class="grid three"><div class="card"><h3>คัดกรองแล้ว</h3><div class="value" style="font-size:32px;font-weight:850">1,174</div></div><div class="card"><h3>กลุ่มเสี่ยง</h3><div class="value" style="font-size:32px;font-weight:850">326</div></div><div class="card"><h3>ยังไม่คัดกรอง</h3><div class="value" style="font-size:32px;font-weight:850">74</div></div></div></section>
+
+<section id="visits" class="page hidden"><div class="page-title"><div><h1>ระบบเยี่ยมบ้าน</h1><p>จัดลำดับความสำคัญและติดตามการดูแล</p></div><button class="btn btn-primary" onclick="toast('ฟังก์ชันสร้างแผนเยี่ยมบ้านพร้อมเชื่อม GAS ได้')">+ สร้างแผนเยี่ยมบ้าน</button></div><div class="card"><h3>ผู้ที่ควรติดตามเร่งด่วน</h3><div class="row"><span>ผู้ป่วยติดบ้าน/ติดเตียง</span><span class="badge b-red">18 ราย</span></div><div class="row"><span>ผู้ป่วยขาดนัด</span><span class="badge b-red">12 ราย</span></div><div class="row"><span>กลุ่มเสี่ยง NCD สูง</span><span class="badge b-yellow">74 ราย</span></div></div></section>
+
+<section id="epidemic" class="page hidden"><div class="page-title"><div><h1>ระบบระบาดวิทยา</h1><p>เฝ้าระวังเหตุการณ์และแนวโน้มโรค</p></div></div><div class="grid two"><div class="card"><h3>เหตุการณ์เฝ้าระวัง</h3><div class="row"><span>ไข้เลือดออก</span><span class="badge b-red">5</span></div><div class="row"><span>โรคทางเดินหายใจ</span><span class="badge b-yellow">4</span></div><div class="row"><span>อาหารเป็นพิษ</span><span class="badge b-yellow">3</span></div></div><div class="card"><h3>สถานะพื้นที่</h3><div class="map"><span class="map-label">ตัวอย่างแผนที่ความเสี่ยง</span><i class="dot" style="left:30%;top:40%"></i><i class="dot" style="left:63%;top:28%"></i><i class="dot" style="left:72%;top:67%"></i></div></div></div></section>
+
+<section id="gis" class="page hidden"><div class="page-title"><div><h1>แผนที่สุขภาพชุมชน</h1><p>ตัวอย่างหน้าตา GIS — สามารถต่อ Google Maps/Leaflet ได้</p></div></div><div class="card"><div class="map"><span class="map-label">Community Health Map</span><i class="dot" style="left:20%;top:35%"></i><i class="dot" style="left:42%;top:58%"></i><i class="dot" style="left:67%;top:25%"></i><i class="dot" style="left:77%;top:70%"></i><i class="dot" style="left:52%;top:31%"></i></div></div></section>
+
+<section id="kpi" class="page hidden"><div class="page-title"><div><h1>ติดตาม KPI</h1><p>ภาพรวมตัวชี้วัดการดำเนินงาน</p></div></div><div class="card"><table><thead><tr><th>ตัวชี้วัด</th><th>เป้าหมาย</th><th>ผลงาน</th><th>สถานะ</th></tr></thead><tbody><tr><td>คัดกรอง DM</td><td>90%</td><td>94%</td><td><span class="badge b-green">ผ่าน</span></td></tr><tr><td>คัดกรอง HT</td><td>90%</td><td>87%</td><td><span class="badge b-yellow">ติดตาม</span></td></tr><tr><td>เยี่ยมผู้ป่วยติดบ้าน</td><td>100%</td><td>92%</td><td><span class="badge b-yellow">ติดตาม</span></td></tr></tbody></table></div></section>
+</main></div>
+</div>
+
+<div id="personModal" class="modal hidden">
+<div class="modal-card"><div class="modal-head"><h2 id="personModalTitle" style="margin-top:0">เพิ่มข้อมูลประชาชน</h2></div><input id="fPersonKey" type="hidden"><div class="form-grid">
+<div><label>ชื่อ-สกุล</label><input id="fName" class="input"></div>
+<div><label>เลขบัตรประชาชน</label><input id="fCid" class="input" maxlength="13"></div>
+<div><label>เพศ</label><select id="fSex" class="input"><option>ชาย</option><option>หญิง</option><option>อื่น ๆ</option></select></div>
+<div><label>อายุ</label><input id="fAge" type="number" class="input"></div>
+<div><label>หมู่บ้าน</label><input id="fVillage" class="input"></div>
+<div><label>สถานะสุขภาพ</label><select id="fStatus" class="input"><option>ปกติ</option><option>กลุ่มเสี่ยง</option><option>ผู้ป่วยเรื้อรัง</option><option>ติดบ้าน/ติดเตียง</option></select></div>
+<div><label>สถานะความเสี่ยง</label><select id="fRiskStatus" class="input"><option value="">คำนวณอัตโนมัติ</option><option>ต่ำ</option><option>ปานกลาง</option><option>สูง</option><option>สูงมาก</option></select></div>
+</div><div class="modal-actions"><button class="btn btn-light" onclick="closePerson()">ยกเลิก</button><button class="btn btn-primary" onclick="savePerson()">บันทึก</button></div></div>
+</div>
+<div id="toast" class="toast hidden"></div>
+
+<script>
+/* ใส่ Web App URL ของ Google Apps Script ตรงนี้ */
+const GAS_URL = "PASTE_YOUR_GAS_WEB_APP_URL_HERE";
+const PEOPLE_STORAGE_KEY = "chi_people";
+const DEMO_PEOPLE = [
+ {id:"demo-1",name:"สมชาย ใจดี",cid:"1100000000001",sex:"ชาย",age:58,village:"หมู่ 5",status:"กลุ่มเสี่ยง",riskStatus:"ปานกลาง"},
+ {id:"demo-2",name:"สุดา แสงทอง",cid:"1100000000002",sex:"หญิง",age:67,village:"หมู่ 8",status:"ผู้ป่วยเรื้อรัง",riskStatus:"สูง"},
+ {id:"demo-3",name:"ประเสริฐ คำแพง",cid:"1100000000003",sex:"ชาย",age:74,village:"หมู่ 2",status:"ติดบ้าน/ติดเตียง",riskStatus:"สูงมาก"},
+ {id:"demo-4",name:"มาลี พรหมมา",cid:"1100000000004",sex:"หญิง",age:42,village:"หมู่ 5",status:"ปกติ",riskStatus:"ต่ำ"}
+];
+let people=loadLocalPeople();
+let editingPersonKey="";
+
+document.getElementById("todayText").textContent="อัปเดตล่าสุด: "+new Date().toLocaleString("th-TH");
+
+function login(){
+ const u=document.getElementById("username").value.trim(), p=document.getElementById("password").value;
+ if(u==="admin" && p==="1234"){
+   sessionStorage.setItem("chi_login","1");
+   document.getElementById("loginScreen").classList.add("hidden");
+   document.getElementById("app").classList.remove("hidden");
+   bootApp();
+ }else document.getElementById("loginError").textContent="ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+}
+function logout(){sessionStorage.removeItem("chi_login");location.reload()}
+if(sessionStorage.getItem("chi_login")==="1"){document.getElementById("loginScreen").classList.add("hidden");document.getElementById("app").classList.remove("hidden");bootApp();}
+function showPage(id,el){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));
+ if(el)el.classList.add("active");
+ if(id==="people")renderPeople();
+}
+function bootApp(){loadPeople();renderPeople();refreshDashboard(true)}
+function loadPeople(){
+ if(gasReady()) gasJSONP("people",{},data=>{
+   if(data&&data.ok&&Array.isArray(data.people)){
+     people=data.people.map(normalizePerson);
+     persistPeople();
+     renderPeople();
+     updateDashboardFromPeople();
+   }
+ });
+}
+function renderPeople(){
+ const q=(document.getElementById("personSearch")?.value||"").trim().toLowerCase();
+ const risk=(document.getElementById("riskFilter")?.value||"").trim();
+ const rows=people.filter(x=>{
+   const riskStatus=getRiskStatus(x);
+   const text=[x.name,x.cid,x.sex,x.age,x.village,x.status,riskStatus].join(" ").toLowerCase();
+   return (!q||text.includes(q))&&(!risk||riskStatus===risk);
+ });
+ document.getElementById("peopleBody").innerHTML=rows.map(x=>{
+   const key=getPersonKey(x);
+   const riskStatus=getRiskStatus(x);
+   return `<tr><td><b>${esc(x.name)}</b></td><td><span class="subtle">${esc(x.cid||"-")}</span></td><td>${esc(x.sex)}</td><td>${esc(x.age||"-")}</td><td>${esc(x.village)}</td><td><span class="badge ${statusBadgeClass(x.status)}">${esc(x.status||"-")}</span></td><td><span class="badge ${riskBadgeClass(riskStatus)}">${esc(riskStatus)}</span></td><td><div class="actions"><button class="btn btn-light btn-sm" onclick="openPerson(${jsArg(key)})">แก้ไข</button><button class="btn btn-danger btn-sm" onclick="deletePerson(${jsArg(key)})">ลบ</button></div></td></tr>`;
+ }).join("")||'<tr><td colspan="8" style="text-align:center;color:#667085">ไม่พบข้อมูล</td></tr>';
+}
+function resetPeopleFilters(){document.getElementById("personSearch").value="";document.getElementById("riskFilter").value="";renderPeople()}
+function openPerson(key=""){
+ editingPersonKey=key;
+ clearPersonForm();
+ const person=key?people.find(x=>getPersonKey(x)===key):null;
+ document.getElementById("personModalTitle").textContent=person?"แก้ไขข้อมูลประชาชน":"เพิ่มข้อมูลประชาชน";
+ if(person){
+   document.getElementById("fPersonKey").value=key;
+   document.getElementById("fName").value=person.name||"";
+   document.getElementById("fCid").value=person.cid||"";
+   document.getElementById("fSex").value=person.sex||"ชาย";
+   document.getElementById("fAge").value=person.age||"";
+   document.getElementById("fVillage").value=person.village||"";
+   document.getElementById("fStatus").value=person.status||"ปกติ";
+   document.getElementById("fRiskStatus").value=person.riskStatus!==calculateRiskStatus(person)?person.riskStatus||"":"";
+ }
+ document.getElementById("personModal").classList.remove("hidden");
+}
+function closePerson(){document.getElementById("personModal").classList.add("hidden");editingPersonKey=""}
+function savePerson(){
+ const key=val("fPersonKey")||editingPersonKey;
+ const item={name:val("fName"),cid:val("fCid"),sex:val("fSex"),age:Number(val("fAge"))||0,village:val("fVillage"),status:val("fStatus"),riskStatus:val("fRiskStatus")};
+ if(!item.name){toast("กรุณาระบุชื่อ-สกุล");return}
+ if(!item.riskStatus)item.riskStatus=calculateRiskStatus(item);
+ let action="savePerson", payload=item;
+ if(key){
+   const idx=people.findIndex(x=>getPersonKey(x)===key);
+   if(idx>-1){
+     people[idx]={...people[idx],...item,updatedAt:new Date().toISOString()};
+     action="updatePerson";
+     payload=people[idx];
+   }else{
+     payload={...item,id:createPersonId()};
+     people.unshift(payload);
+   }
+ }else{
+   payload={...item,id:createPersonId(),createdAt:new Date().toISOString()};
+   people.unshift(payload);
+ }
+ persistPeople();renderPeople();updateDashboardFromPeople();closePerson();toast(action==="updatePerson"?"แก้ไขข้อมูลแล้ว":"เพิ่มรายชื่อแล้ว");
+ if(gasReady()) gasJSONP(action,payload,data=>{
+   if(data&&data.ok){if(data.person)mergeSyncedPerson(payload,data.person);toast("บันทึกข้อมูลเข้า Google Sheet แล้ว")}
+   else toast(data&&data.error?data.error:"บันทึก Google Sheet ไม่สำเร็จ");
+ });
+}
+function deletePerson(key){
+ const person=people.find(x=>getPersonKey(x)===key);
+ if(!person||!confirm(`ต้องการลบข้อมูลของ ${person.name||"รายการนี้"} ใช่ไหม?`))return;
+ people=people.filter(x=>getPersonKey(x)!==key);
+ persistPeople();renderPeople();updateDashboardFromPeople();toast("ลบรายชื่อแล้ว");
+ if(gasReady()) gasJSONP("deletePerson",person,data=>{
+   if(data&&data.ok)toast("ลบข้อมูลจาก Google Sheet แล้ว");
+   else toast(data&&data.error?data.error:"ลบข้อมูลใน Google Sheet ไม่สำเร็จ");
+ });
+}
+function refreshDashboard(){
+ const silent=arguments[0]===true;
+ drawChart();
+ updateDashboardFromPeople();
+ if(gasReady()) gasJSONP("dashboard",{},data=>{
+   if(data){if(data.population!=null)document.getElementById("kPop").textContent=Number(data.population).toLocaleString("th-TH");if(data.risk!=null)document.getElementById("kRisk").textContent=Number(data.risk).toLocaleString("th-TH");if(data.visits!=null)document.getElementById("kVisit").textContent=Number(data.visits).toLocaleString("th-TH");if(data.events!=null)document.getElementById("kEvent").textContent=Number(data.events).toLocaleString("th-TH");}
+ });
+ if(!silent)toast("อัปเดต Dashboard แล้ว");
+}
+function drawChart(){const v=[58,68,74,81,91,94], max=100;document.getElementById("chart").innerHTML=v.map((n,i)=>`<div class="bar" style="height:${n/max*88}%"><span>${n}%</span></div>`).join("")}
+function updateDashboardFromPeople(){
+ document.getElementById("kPop").textContent=people.length.toLocaleString("th-TH");
+ document.getElementById("kRisk").textContent=people.filter(x=>getRiskStatus(x)!=="ต่ำ").length.toLocaleString("th-TH");
+}
+function gasJSONP(action,payload,cb){
+ const callback="chi_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+ window[callback]=data=>{try{cb(data)}finally{delete window[callback];s.remove()}};
+ const s=document.createElement("script");
+ s.src=GAS_URL+"?action="+encodeURIComponent(action)+"&payload="+encodeURIComponent(JSON.stringify(payload))+"&callback="+callback+"&t="+Date.now();
+ s.onerror=()=>{delete window[callback];s.remove();toast("เชื่อมต่อ Google Apps Script ไม่สำเร็จ");};
+ document.body.appendChild(s);
+}
+function loadLocalPeople(){try{const saved=JSON.parse(localStorage.getItem(PEOPLE_STORAGE_KEY)||"null");if(Array.isArray(saved))return saved.map(normalizePerson)}catch(e){}return DEMO_PEOPLE.map(normalizePerson)}
+function persistPeople(){try{localStorage.setItem(PEOPLE_STORAGE_KEY,JSON.stringify(people))}catch(e){}}
+function normalizePerson(x,i=0){
+ const p={...x};
+ p.id=String(p.id||p._row&&`row-${p._row}`||p.cid&&`cid-${p.cid}`||`person-${Date.now()}-${i}`);
+ p._row=p._row||p.row||"";
+ p.name=String(p.name||"");
+ p.cid=String(p.cid||"");
+ p.sex=String(p.sex||"");
+ p.age=Number(p.age)||0;
+ p.village=String(p.village||"");
+ p.status=String(p.status||"ปกติ");
+ p.riskStatus=String(p.riskStatus||p.risk_status||p.risk||calculateRiskStatus(p));
+ return p;
+}
+function getPersonKey(p){return String(p.id||p._row||p.cid||"")}
+function createPersonId(){return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():"person-"+Date.now()+"-"+Math.random().toString(36).slice(2)}
+function calculateRiskStatus(p){
+ const age=Number(p.age)||0, status=String(p.status||"");
+ if(status.includes("ติดบ้าน")||status.includes("ติดเตียง"))return "สูงมาก";
+ if(status.includes("เรื้อรัง")||age>=70)return "สูง";
+ if(status.includes("เสี่ยง")||age>=60)return "ปานกลาง";
+ return "ต่ำ";
+}
+function getRiskStatus(p){return p.riskStatus||calculateRiskStatus(p)}
+function riskBadgeClass(risk){return risk==="ต่ำ"?"b-green":risk==="ปานกลาง"?"b-yellow":"b-red"}
+function statusBadgeClass(status){status=String(status||"");return status.includes("ติด")||status.includes("เรื้อรัง")?"b-red":status.includes("เสี่ยง")?"b-yellow":"b-green"}
+function clearPersonForm(){["fPersonKey","fName","fCid","fAge","fVillage","fRiskStatus"].forEach(id=>document.getElementById(id).value="");document.getElementById("fSex").value="ชาย";document.getElementById("fStatus").value="ปกติ"}
+function mergeSyncedPerson(original,synced){
+ const person=normalizePerson({...original,...synced});
+ const idx=people.findIndex(x=>getPersonKey(x)===getPersonKey(original)||getPersonKey(x)===getPersonKey(person));
+ if(idx>-1)people[idx]=person;else people.unshift(person);
+ persistPeople();renderPeople();updateDashboardFromPeople();
+}
+function gasReady(){return GAS_URL&&!GAS_URL.includes("PASTE_")}
+function val(id){return document.getElementById(id).value.trim()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function jsArg(s){return esc(JSON.stringify(String(s)))}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.remove("hidden");clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.add("hidden"),2800)}
+drawChart();
+</script>
+</body>
+</html>
